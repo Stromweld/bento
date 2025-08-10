@@ -33,77 +33,45 @@ jobs:
     with:
       EXCLUDE_REGEX: 'amazonlinux-2.*|rhel.*|sles.*|solaris.*|windows-11-aarch64.*,macos-*'
 
-#   packer-lint:
-#     uses: chef/github-workflows/.github/workflows/packer-lint.yml@main
-#     secrets: inherit
-
-#  pkr-bld-amazonlinux-arm64:
-#    uses: ./.github/workflows/pkr-bld-amazonlinux-arm64.yml
-#    secrets: inherit
-#
-#  pkr-bld-amazonlinux-x64:
-#    uses: ./.github/workflows/pkr-bld-amazonlinux-x64.yml
-#    secrets: inherit
-#
-#  pkr-bld-hyperv-x64:
-#    uses: ./.github/workflows/pkr-bld-hyperv-x64.yml
-#    secrets: inherit
-#
-#  pkr-bld-parallels-arm64:
-#    uses: ./.github/workflows/pkr-bld-parallels-arm64.yml
-#    secrets: inherit
-#
-#  pkr-bld-parallels-x64:
-#    uses: ./.github/workflows/pkr-bld-parallels-x64.yml
-#    secrets: inherit
-#
-#  pkr-bld-qemu-arm64:
-#    uses: ./.github/workflows/pkr-bld-qemu-arm64.yml
-#    secrets: inherit
-#
-#  pkr-bld-qemu-x64:
-#    uses: ./.github/workflows/pkr-bld-qemu-x64.yml
-#    secrets: inherit
-#
-#  pkr-bld-virtualbox-arm64:
-#    uses: ./.github/workflows/pkr-bld-virtualbox-arm64.yml
-#    secrets: inherit
-#
-#  pkr-bld-virtualbox-x64:
-#    uses: ./.github/workflows/pkr-bld-virtualbox-x64.yml
-#    secrets: inherit
-#
-#  pkr-bld-vmware-arm64:
-#    uses: ./.github/workflows/pkr-bld-vmware-arm64.yml
-#    secrets: inherit
-#
-#  pkr-bld-vmware-x64:
-#    uses: ./.github/workflows/pkr-bld-vmware-x64.yml
-#    secrets: inherit
-
-  pkr-bld-win-10:
-    uses: ./.github/workflows/pkr-bld-win-10.yml
+  packer-lint:
+    uses: chef/github-workflows/.github/workflows/packer-lint.yml@main
     secrets: inherit
 
-  pkr-bld-win-11:
-    uses: ./.github/workflows/pkr-bld-win-11.yml
-    secrets: inherit
+ pkr-bld-hyperv-x64:
+   uses: ./.github/workflows/pkr-bld-hyperv-x64.yml
+   secrets: inherit
 
-  pkr-bld-win-2016:
-    uses: ./.github/workflows/pkr-bld-win-2016.yml
-    secrets: inherit
+ pkr-bld-parallels-arm64:
+   uses: ./.github/workflows/pkr-bld-parallels-arm64.yml
+   secrets: inherit
 
-  pkr-bld-win-2019:
-    uses: ./.github/workflows/pkr-bld-win-2019.yml
-    secrets: inherit
+ pkr-bld-parallels-x64:
+   uses: ./.github/workflows/pkr-bld-parallels-x64.yml
+   secrets: inherit
 
-  pkr-bld-win-2022:
-    uses: ./.github/workflows/pkr-bld-win-2022.yml
-    secrets: inherit
+ pkr-bld-qemu-arm64:
+   uses: ./.github/workflows/pkr-bld-qemu-arm64.yml
+   secrets: inherit
 
-  pkr-bld-win-hyperv:
-    uses: ./.github/workflows/pkr-bld-win-hyperv.yml
-    secrets: inherit
+ pkr-bld-qemu-x64:
+   uses: ./.github/workflows/pkr-bld-qemu-x64.yml
+   secrets: inherit
+
+ pkr-bld-virtualbox-arm64:
+   uses: ./.github/workflows/pkr-bld-virtualbox-arm64.yml
+   secrets: inherit
+
+ pkr-bld-virtualbox-x64:
+   uses: ./.github/workflows/pkr-bld-virtualbox-x64.yml
+   secrets: inherit
+
+ pkr-bld-vmware-arm64:
+   uses: ./.github/workflows/pkr-bld-vmware-arm64.yml
+   secrets: inherit
+
+ pkr-bld-vmware-x64:
+   uses: ./.github/workflows/pkr-bld-vmware-x64.yml
+   secrets: inherit
 
   check_jobs_pass:
     if: always()
