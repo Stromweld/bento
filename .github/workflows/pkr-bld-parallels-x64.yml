@@ -13,26 +13,13 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - almalinux-8
-          - almalinux-9
-          - almalinux-10
-          - centos-stream-9
-          - centos-stream-10
-          - debian-12
-          - debian-13
-          - fedora-41
-          - fedora-42
-          - freebsd-13
-          - freebsd-14
-          - opensuse-leap-15
-          - oraclelinux-8
-          - oraclelinux-9
-          - oraclelinux-10
-          - rockylinux-8
-          - rockylinux-9
-          - rockylinux-10
-          - ubuntu-22.04
-          - ubuntu-24.04
+          - macos-14
+          - macos-15
+          - windows-11
+          - windows-2016
+          - windows-2019
+          - windows-2022
+          - windows-2025
         provider:
           - parallels-iso
     steps:
