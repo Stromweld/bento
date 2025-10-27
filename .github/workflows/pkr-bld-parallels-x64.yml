@@ -2,6 +2,9 @@
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 env:
   PACKER_GITHUB_API_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   # PACKER_LOG: "1"
@@ -32,13 +35,14 @@ jobs:
       - name: Bento build
         run: |
           eval "$(chef shell-init bash)"
-          bento build -o ${{ matrix.provider }}.vm --vars 'ssh_timeout=30m' os_pkrvars/$(echo ${{ matrix.os }} | cut -d "-" -f 1)/"${{ matrix.os }}-x86_64.pkrvars.hcl"
-          ls -alh builds/
-          cat builds/${{ matrix.os }}*-x86_64._metadata.json
+          bento build -o ${{ matrix.provider }}.vm os_pkrvars/$(echo ${{ matrix.os }} | cut -d "-" -f 1)/"${{ matrix.os }}-x86_64.pkrvars.hcl"
+          ls -alh builds/build_complete/
+          cat builds/build_complete/${{ matrix.os }}*-x86_64._metadata.json
       - name: Remove VM in case of canceled job
         if: cancelled()
         run: |
           VM="$(prlctl list -a | grep ${{ matrix.os }} | cut -d " " -f 1)"
+          echo "VM Name: $VM"
           echo Powering off and deleting any existing VMs named ${{ matrix.os }}*-amd64
           prlctl stop "$VM" --kill 2> /dev/null
           sleep 1
@@ -53,8 +57,8 @@ jobs:
         with:
           name: "${{ matrix.os }}-parallels-x86_64"
           path: |
-            builds/*.box
-            builds/*.json
+            builds/testing_passed/x86_64/*.box
+            builds/testing_passed/x86_64/*.json
           overwrite: true
           retention-days: 10
           compression-level: 0 # no compression

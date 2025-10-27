@@ -1,0 +1,58 @@
+---
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  PACKER_GITHUB_API_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  # PACKER_LOG: "1"
+
+jobs:
+  aarch64:
+    runs-on: [self-hosted, ARM64, virtualbox]
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - amazonlinux-2023
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+#      - name: Setup Packer
+#        if: steps.verify-changed-files.outputs.files_changed == 'true'
+#        uses: hashicorp/setup-packer@main
+#        with:
+#          version: latest
+      - name: Bento build
+        run: |
+          eval "$(chef shell-init bash)"
+          ./${{ matrix.os }}-aarch64-virtualbox-build.sh
+          ls -alh builds/build_complete
+          cat builds/build_complete/${{ matrix.os }}*-aarch64._metadata.json
+
+      - name: Remove VM in case of canceled job
+        if: cancelled()
+        run: |
+          VM="$(VBoxManage list vms | grep ${{ matrix.os }} | cut -d " " -f 1)"
+          echo "VM Name: $VM"
+          echo Powering off and deleting any existing VMs named ${{ matrix.os }}*-aarch64
+          VBoxManage controlvm $VM poweroff
+          sleep 1
+          vboxmanage unregistervm $VM --delete
+          sleep 2
+      - name: Bento Test
+        run: |
+          eval "$(chef shell-init bash)"
+          bento test
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.os }}-virtualbox-aarch64"
+          path: |
+            builds/testing_passed/aarch64/*.box
+            builds/testing_passed/aarch64/*.json
+          overwrite: true
+          retention-days: 10
+          compression-level: 0 # no compression
