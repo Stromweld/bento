@@ -2,6 +2,9 @@
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 env:
   PACKER_GITHUB_API_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   # PACKER_LOG: "1"
@@ -55,12 +58,13 @@ jobs:
         run: |
           rm -rf builds
           sudo mkdir -p /mnt/builds/iso
+          sudo mkdir -p /mnt/builds/build_complete
           sudo chmod -R 777 /mnt/builds
           sudo ln -s /mnt/builds ./
           eval "$(chef shell-init bash)"
-          bento build -o ${{ matrix.provider }}.vm --vars 'ssh_timeout=30m' --vars "qemu_accelerator=kvm" os_pkrvars/$(echo ${{ matrix.os }} | cut -d "-" -f 1)/"${{ matrix.os }}-x86_64.pkrvars.hcl"
-          ls -alh builds/
-          cat builds/${{ matrix.os }}*-x86_64._metadata.json
+          bento build -o ${{ matrix.provider }}.vm os_pkrvars/$(echo ${{ matrix.os }} | cut -d "-" -f 1)/"${{ matrix.os }}-x86_64.pkrvars.hcl"
+          ls -alh builds/build_complete/
+          cat builds/build_complete/${{ matrix.os }}*-x86_64._metadata.json
       - name: Bento Test
         run: |
           eval "$(chef shell-init bash)"
@@ -70,8 +74,8 @@ jobs:
         with:
           name: "${{ matrix.os }}-qemu-x86_64"
           path: |
-            builds/*.box
-            builds/*.json
+            builds/testing_passed/x86_64/*.box
+            builds/testing_passed/x86_64/*.json
           overwrite: true
           retention-days: 10
           compression-level: 0 # no compression
